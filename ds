@@ -1,16 +1,16 @@
 #!/bin/sh
 # Copyright (c) 2026 Rodrigo Monteiro Junior. All Rights Reserved.
 
-die() {
-  msg="$1"
-  printf "%s\n" "$msg"
-  exit
-}
+# 'Delete Script' - Shell scripting deletion tool
 
-SRCNAME="$1"
-PROGRAM="$HOME"/.local/bin/"$SRCNAME"
+DIR=$(dirname "$0")
 
-[ -z "$SRCNAME" ] && die "No script name provided"
-test -e "$PROGRAM" && die "Not found"
+# shellcheck source=./common
+. "$DIR"/common
 
-rm -i "$HOME"/.local/bin/"$SRCNAME"
+parse -var srcName - "$@"
+
+PROGRAM="$(with_bin "${srcName?}")"
+
+if_exists "$PROGRAM"
+rm -i "$PROGRAM"

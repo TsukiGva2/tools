@@ -1,16 +1,16 @@
 #!/bin/sh
 # Copyright (c) 2026 Rodrigo Monteiro Junior. All Rights Reserved.
 
-die() {
-  msg="$1"
-  printf "%s\n" "$msg"
-  exit
-}
+# 'Edit Script' - Shell scripting modification tool
 
-SRCNAME="$1"
-PROGRAM="$HOME"/.local/bin/"$SRCNAME"
+DIR=$(dirname "$0")
 
-[ -z "$SRCNAME" ] && die "No script name provided"
-test -e "$PROGRAM" || die "Not found"
+# shellcheck source=./common
+. "$DIR"/common
 
+parse -var srcName - "$@"
+
+PROGRAM="$(with_bin "${srcName?}")"
+
+if_exists "$PROGRAM"
 nvim "$PROGRAM"

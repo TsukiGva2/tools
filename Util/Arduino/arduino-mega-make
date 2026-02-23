@@ -1,0 +1,12 @@
+#!/bin/sh
+# Copyright (c) 2026 Rodrigo Monteiro Junior. All Rights Reserved.
+
+# Util/Arduino/'Arduino Mega, Make' - Arduino compilation tool for the MEGA2560
+
+port=/dev/ttyUSB0
+
+# XXX
+sudo chmod 666 "$port"
+
+arduino-cli compile --fqbn arduino:avr:mega
+arduino-cli upload --fqbn arduino:avr:mega --port "$port"

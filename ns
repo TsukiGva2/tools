@@ -1,23 +1,32 @@
 #!/bin/sh
+# Copyright (c) 2026 Rodrigo Monteiro Junior. All Rights Reserved.
+
+# 'New Script' - Shell scripting creation tool
+
+DIR=$(dirname "$0")
+
+# shellcheck source=./common
+. "$DIR"/common
 
 prompt_edit() {
+  file="$1"
   printf "Program exists! Edit? (N/y): "
-  read -r OPTION
-  echo "$OPTION" | grep -qi 'y' &&
-    exec "$HOME"/local/bin/es "$1"
+  read -r option
+  if echo "$option" | grep -qi 'y'; then
+    exec "$DIR"/es "$file"
+  else
+    die "Leaving file as is."
+  fi
 }
 
-SRCNAME="$1"
+parse -var srcName - "$@"
 
-[ -z "$SRCNAME" ] && exit
+program="$(with_bin "${srcName?}")"
 
-BINDIR="/home/rodrigo/.local/bin/"
-PROGRAM="$BINDIR"/"$SRCNAME"
+exists "$program" && prompt_edit "${srcName?}"
 
-test -e "$PROGRAM" && prompt_edit "$SRCNAME"
+touch "$program"
+chmod +x "$program"
+header >"$program"
 
-printf "#!/bin/sh\n" >"$PROGRAM"
-printf "# Copyright (c) 2026 Rodrigo Monteiro Junior. All Rights Reserved.\n\n" >>"$PROGRAM"
-
-nvim "$PROGRAM"
-chmod +x "$PROGRAM"
+nvim "$program"

@@ -1,0 +1,74 @@
+#!/bin/sh
+# Copyright (c) 2026 Rodrigo Monteiro Junior. All Rights Reserved.
+
+# 'Common' - Shell scripting utilites
+
+BINDIR="/home/rodrigo/.local/bin"
+
+die() {
+  msg="$1"
+  printf "%s\n" "$msg"
+  exit 1
+}
+
+with_bin() {
+  srcname="${1?}"
+  printf "%s/%s" "$BINDIR" "$srcname"
+}
+
+exists() {
+  file="${1?}"
+  test -e "$file"
+}
+
+if_exists() {
+  exists "$1" || die "'$file' Not found"
+}
+
+assign_dyn() {
+  read -r "${1?}" \
+    <<EOF
+${2?}
+EOF
+}
+
+parse() {
+  variables=""
+
+  # Parsing params
+  while [ $# -gt 0 ]; do
+    case "$1" in
+    -var)
+      [ $# -le 1 ] && die "Missing argument for -var"
+      variables="$variables ${2?}"
+      shift 2
+      ;;
+    -)
+      shift
+      break
+      ;;
+    *)
+      break
+      ;;
+    esac
+  done
+
+  # Actual cmdline args
+  for vn in $variables; do
+    if [ $# -lt 1 ] || [ -z "$1" ]; then
+      die "Missing positional argument '$vn'"
+    fi
+    assign_dyn "$vn" "$1"
+    shift
+  done
+}
+
+header() {
+  title="${1:-Your Title}"
+  description="${2:-description}"
+
+  printf "#!/bin/sh\n"
+  printf "# Copyright (c) 2026 Rodrigo Monteiro Junior. All Rights Reserved.\n\n"
+  printf "# '%s' - %s\n\n" "$title" "$description"
+  printf ". %s/common\n\n" "$BINDIR"
+}
