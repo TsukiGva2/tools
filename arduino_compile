@@ -1,0 +1,4 @@
+#!/bin/sh
+sudo chmod 666 /dev/ttyUSB0
+arduino-cli compile --fqbn arduino:avr:mega
+arduino-cli upload --fqbn arduino:avr:mega --port /dev/ttyUSB0

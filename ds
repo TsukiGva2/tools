@@ -1,0 +1,16 @@
+#!/bin/sh
+# Copyright (c) 2026 Rodrigo Monteiro Junior. All Rights Reserved.
+
+die() {
+  msg="$1"
+  printf "%s\n" "$msg"
+  exit
+}
+
+SRCNAME="$1"
+PROGRAM="$HOME"/.local/bin/"$SRCNAME"
+
+[ -z "$SRCNAME" ] && die "No script name provided"
+test -e "$PROGRAM" && die "Not found"
+
+rm -i "$HOME"/.local/bin/"$SRCNAME"

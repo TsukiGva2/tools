@@ -1,0 +1,23 @@
+#!/bin/sh
+
+prompt_edit() {
+  printf "Program exists! Edit? (N/y): "
+  read -r OPTION
+  echo "$OPTION" | grep -qi 'y' &&
+    exec "$HOME"/local/bin/es "$1"
+}
+
+SRCNAME="$1"
+
+[ -z "$SRCNAME" ] && exit
+
+BINDIR="/home/rodrigo/.local/bin/"
+PROGRAM="$BINDIR"/"$SRCNAME"
+
+test -e "$PROGRAM" && prompt_edit "$SRCNAME"
+
+printf "#!/bin/sh\n" >"$PROGRAM"
+printf "# Copyright (c) 2026 Rodrigo Monteiro Junior. All Rights Reserved.\n\n" >>"$PROGRAM"
+
+nvim "$PROGRAM"
+chmod +x "$PROGRAM"
